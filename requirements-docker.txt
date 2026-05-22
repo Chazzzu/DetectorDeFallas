@@ -1,0 +1,10 @@
+# Dependencias optimizadas para Docker
+# - opencv-python-headless: versión sin GUI (más pequeña, perfecta para servidor)
+# - torch CPU: se fuerza vía --extra-index-url en el Dockerfile
+
+flask>=3.0.0
+opencv-python-headless>=4.8.0
+pillow>=10.0.0
+ultralytics>=8.3.0
+torch>=2.0.0
+torchvision>=0.15.0

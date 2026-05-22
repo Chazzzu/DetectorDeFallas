@@ -1,0 +1,14 @@
+# Override para Linux (PC Linux o Arduino UNO Q)
+# Da acceso a la camara USB del host al contenedor.
+#
+# Uso:
+#   docker compose -f docker-compose.yml -f docker-compose.linux.yml up -d
+
+services:
+  inspector:
+    devices:
+      - /dev/video0:/dev/video0
+      # Descomenta si tienes mas camaras:
+      # - /dev/video1:/dev/video1
+    group_add:
+      - video

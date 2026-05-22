@@ -1,0 +1,40 @@
+# Entornos virtuales
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos de datos (se montan como volúmenes)
+inspecciones.db
+inspecciones.db-journal
+capturas_defectos/
+
+# Modelos (se montan como volumen, NO incluir en imagen)
+modelos/*.pt
+modelos/*.onnx
+
+# Logs y temporales
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Documentación e IDE
+.git/
+.gitignore
+.vscode/
+.idea/
+*.md
+README.md
+
+# Docker (no incluir Docker en Docker)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Pytest, coverage, etc.
+.pytest_cache/
+.coverage
+htmlcov/

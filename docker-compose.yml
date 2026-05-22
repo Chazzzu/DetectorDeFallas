@@ -1,0 +1,78 @@
+# ============================================================
+# Inspector ITT - Docker Compose
+# Configuración portable: funciona en Windows y Linux SIN GPU
+# ============================================================
+#
+# Quick start:
+#   docker compose up -d        # arranca
+#   docker compose logs -f      # ver logs
+#   docker compose down         # detener
+# ============================================================
+
+services:
+  inspector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: inspector-itt:latest
+    container_name: inspector_itt
+    restart: unless-stopped
+
+    # Puerto del dashboard web
+    ports:
+      - "5000:5000"
+
+    # Volúmenes persistentes
+    volumes:
+      # Modelos .pt (bind mount, edítalos sin rebuild)
+      - ./modelos:/app/modelos:ro
+      # Datos persistentes: DB + capturas (named volume)
+      - inspector_data:/data
+      # Para OPCIÓN D (video demo): descomenta esta línea
+      # - ./demo_videos:/data/demo_videos:ro
+
+    # ----- Configuración -----
+    environment:
+      # =========================================================
+      # FUENTE DE VIDEO (elige UNA opción descomentándola)
+      # =========================================================
+      #
+      # OPCIÓN A — Webcam local (solo Linux nativo / UNO Q)
+      # En Windows, Docker Desktop NO tiene acceso directo a webcams.
+      - INSPECTOR_CAMERA_SOURCE=0
+      #
+      # OPCIÓN B — Celular como cámara IP (funciona en Windows y Linux) ⭐
+      # 1) Instala "IP Webcam" en Android (gratis en Play Store)
+      # 2) Abre la app, presiona "Iniciar servidor"
+      # 3) Anota la IP que muestra y usa esa URL:
+      # - INSPECTOR_CAMERA_SOURCE=http://192.168.1.50:8080/video
+      #
+      # OPCIÓN C — Cámara IP industrial RTSP
+      # - INSPECTOR_CAMERA_SOURCE=rtsp://admin:pass@192.168.1.100:554/stream1
+      #
+      # OPCIÓN D — Archivo de video para demos/pruebas
+      # Coloca el archivo en ./demo_videos/ y descomenta el volumen arriba
+      # - INSPECTOR_CAMERA_SOURCE=/data/demo_videos/test.mp4
+      #
+      # =========================================================
+      - INSPECTOR_PORT=5000
+      - TZ=America/Tijuana
+
+    # Para OPCIÓN A en Linux/UNO Q, descomenta acceso a cámara:
+    # devices:
+    #   - /dev/video0:/dev/video0
+    # group_add:
+    #   - video
+
+    # Límites de recursos (importante para el UNO Q con 4GB)
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+        reservations:
+          memory: 1G
+
+# Volúmenes nombrados (Docker los gestiona automáticamente)
+volumes:
+  inspector_data:
+    driver: local
